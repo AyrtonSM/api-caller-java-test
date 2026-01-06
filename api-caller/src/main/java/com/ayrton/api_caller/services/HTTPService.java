@@ -15,15 +15,14 @@ public class HTTPService {
 
     @Value("${kenect.api.token}")
     private String apiToken;
-
-
-    public static final String BASE_URI = "https://candidate-challenge-api-489237493095.us-central1.run.app/api/v1";
+    @Value("${kenect.api.base-url}")
+    private String baseUri;
 
     public HttpResponse<String> doGetRequest(String path){
         try {
             HttpClient client = HttpClient.newHttpClient();
 
-            String URI = BASE_URI + path;
+            String URI = baseUri + path;
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(new URI(URI))
                     .headers("Authorization", "Bearer "+ apiToken)
