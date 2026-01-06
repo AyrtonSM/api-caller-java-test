@@ -1,5 +1,7 @@
 package com.ayrton.api_caller.services;
 
+import com.ayrton.api_caller.exceptions.ExternalApiException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @Service
+@Slf4j
 public class HTTPService {
 
     @Value("${kenect.api.token}")
@@ -37,12 +40,14 @@ public class HTTPService {
                 );
 
             } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
+                log.error(e.getMessage());
+                throw new ExternalApiException("Failed to call external API", e);
             }
 
 
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            throw new ExternalApiException("Failed to call external API", e);
         }
     }
 }

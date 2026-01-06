@@ -2,6 +2,7 @@ package com.ayrton.api_caller.services;
 
 import com.ayrton.api_caller.domain.Contact;
 import com.ayrton.api_caller.domain.dto.ContactDTO;
+import com.ayrton.api_caller.exceptions.ExternalApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,16 @@ public class ContactService {
                 pageSize
         );
 
-        HttpResponse<String>  responseString = httpService.doGetRequest(path);
+        HttpResponse<String>  responseString;
+
+        try{
+            responseString = httpService.doGetRequest(path);
+
+        }catch (ExternalApiException e){
+            log.error(e.getMessage());
+            return Collections.emptyList();
+        }
+
         try{
             return new ObjectMapper().readValue(responseString.body(), new TypeReference<List<Contact>>() {});
         }catch (MismatchedInputException e){
